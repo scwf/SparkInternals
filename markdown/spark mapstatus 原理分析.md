@@ -7,7 +7,7 @@
 主要是在shuffle过程拉取数据时使用，代码可以参见BlockStoreShuffleReader。BlockStoreShuffleReader拉取的过程每次请求最多拉取配置大小的数据（默认是48M／5），所以maptask在mapstaus中的统计的写入大小有如下两个用途：
 
 * 拉取时直接跳过size为0的block
-* 拉取时用于计算一次请求拉多少block，由于我们配置了一个block manager一次请求拉取的数据量大小，所以我吗可以根据mapstatus的统计信息确认这次请求需要拉几个block
+* 拉取时用于计算一次请求拉多少block，由于我们配置了一个block manager一次请求拉取的数据量大小，所以可以根据mapstatus的统计信息确认这次请求需要拉几个block
 
 
 
