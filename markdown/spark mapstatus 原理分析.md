@@ -2,6 +2,15 @@
 
 本文旨在分析 spark 中shuffle过程涉及的mapstatus 原理，以问题方式驱动
 
+## mapstatus 是如何产生的
+
+spark在每个map task（需要写分桶数据的task）完成后，就知道这个map在每个桶写入的大小，比如这个map写了5个桶的数据，每个桶的大小依次为 4，5，2，0，1. 此时基于每个桶写入的数据大小，spark会构造一个mapstatus，用于记录这个map在每个桶写的平均数据大小以及空桶的位置。使用HighlyCompressedMapStatus或者CompressedMapStatus
+
+* CompressedMapStatus 同样会记下卸乳地址，以及每个桶写入的大小
+* HighlyCompressedMapStatus 内部会记下 这个map写的shuffle文件位置，blockmanagerid，每个桶写入平均数据大小，空桶的位置(使用RoaringBitmap)，之所以这么做是因为内存占用，如果还是记下每个桶写的大小，这个数组在分桶数很多时会比较大
+
+每个map task会把mapstatus元数据上传给driver，又driver统一管理起来，后续reduce任务启动后再发送给reduce做shuffle fetch时使用
+
 ## mapstatus 在executor端是如何使用的
 
 主要是在shuffle过程拉取数据时使用，代码可以参见BlockStoreShuffleReader。
