@@ -74,7 +74,7 @@ private[spark] class BypassMergeSortShuffleHandle[K, V](
 
 
 
-可以看到它就只有两个实现，其实就是其一个标识作用。用于标识sort based shuffle writer时使用哪个具体的writer
+可以看到它就只有两个实现，其实就是起一个标识作用。用于标识sort based shuffle writer时使用哪个具体的writer
 
 ``` 
 override def getWriter[K, V](
